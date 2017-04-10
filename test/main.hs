@@ -23,6 +23,12 @@ main = hspec $ do
       test sanitizeBalance testHTML " <a href=\"http://safe.com\">safe</a><a>anchor</a> <img />   <br /> <b>Unbalanced<div></div><img src=\"http://safe.com\"></b>"
       sanitized testHTML " <a href=\"http://safe.com\">safe</a><a>anchor</a> <img />   <br /> <b>Unbalanced</div><img src=\"http://safe.com\">"
 
+    it "srcset" $ do
+      let allowed = "<img srcset=\"safe.com\" />"
+      sanitized allowed allowed
+      let bad = "<img src='evil://evil.com' />"
+      sanitized bad "<img />"
+
     it "relativeURI" $ do
       let testRelativeURI = "<a href=\"foo\">bar</a>"
       sanitized testRelativeURI testRelativeURI

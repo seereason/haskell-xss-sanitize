@@ -128,7 +128,7 @@ sanitaryAttributes = fromList (allowed_html_uri_attributes ++ acceptable_attribu
   \\ (fromList svg_attr_val_allows_ref) -- extra unescaping not implemented
 
 allowed_html_uri_attributes :: [Text]
-allowed_html_uri_attributes = ["href", "src", "cite", "action", "longdesc"]
+allowed_html_uri_attributes = ["href", "src", "srcset", "cite", "action", "longdesc"]
 
 uri_attributes :: Set Text
 uri_attributes = fromList $ allowed_html_uri_attributes ++ ["xlink:href", "xml:base"]
