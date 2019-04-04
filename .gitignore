@@ -4,4 +4,3 @@ dist
 .cabal-sandbox/
 cabal.sandbox.config
 .stack-work/
-xss-sanitize.cabal

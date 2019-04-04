@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, CPP #-}
+{-# LANGUAGE OverloadedStrings, CPP, TemplateHaskell #-}
 module Text.HTML.SanitizeXSS.Css (
   sanitizeCSS
 #ifdef TEST
@@ -6,14 +6,17 @@ module Text.HTML.SanitizeXSS.Css (
 #endif
   ) where
 
-import Data.Text (Text)
+import Data.Text (Text, words)
 import qualified Data.Text as T
 import Data.Attoparsec.Text
+import Data.List (sort)
 import Data.Text.Lazy.Builder (toLazyText)
 import Data.Text.Lazy (toStrict)
-import Data.Set (member, fromList, Set)
+import Data.Set (member, fromAscList, fromList, Set)
 import Data.Char (isDigit)
 import Control.Applicative ((<|>), pure)
+import Instances.TH.Lift
+import Language.Haskell.TH.Lift (lift)
 import Text.CSS.Render (renderAttrs)
 import Text.CSS.Parse (parseAttrs)
 import Prelude hiding (takeWhile)
@@ -107,34 +110,11 @@ allowed_css_attribute_value_units = fromList
   [ "cm", "em", "ex", "in", "mm", "pc", "pt", "px", "%", ",", "\\"]
 
 allowed_css_properties :: Set Text
-allowed_css_properties = fromList acceptable_css_properties
-  where
-    acceptable_css_properties = ["azimuth", "background-color",
-      "border-bottom-color", "border-collapse", "border-color",
-      "border-left-color", "border-right-color", "border-top-color", "clear",
-      "color", "cursor", "direction", "display", "elevation", "float", "font",
-      "font-family", "font-size", "font-style", "font-variant", "font-weight",
-      "height", "letter-spacing", "line-height", "overflow", "pause",
-      "pause-after", "pause-before", "pitch", "pitch-range", "richness",
-      "speak", "speak-header", "speak-numeral", "speak-punctuation",
-      "speech-rate", "stress", "text-align", "text-decoration", "text-indent",
-      "unicode-bidi", "vertical-align", "voice-family", "volume",
-      "white-space", "width"]
+allowed_css_properties = fromAscList $(lift $ sort $ T.words "azimuth background-color border-bottom-color border-collapse border-color border-left-color border-right-color border-top-color clear color cursor direction display elevation float font font-family font-size font-style font-variant font-weight height letter-spacing line-height overflow pause pause-after pause-before pitch pitch-range richness speak speak-header speak-numeral speak-punctuation speech-rate stress text-align text-decoration text-indent unicode-bidi vertical-align voice-family volume white-space width")
 
 allowed_css_keywords :: Set Text
-allowed_css_keywords = fromList acceptable_css_keywords
-  where
-    acceptable_css_keywords = ["auto", "aqua", "black", "block", "blue",
-      "bold", "both", "bottom", "brown", "center", "collapse", "dashed",
-      "dotted", "fuchsia", "gray", "green", "!important", "italic", "left",
-      "lime", "maroon", "medium", "none", "navy", "normal", "nowrap", "olive",
-      "pointer", "purple", "red", "right", "solid", "silver", "teal", "top",
-      "transparent", "underline", "white", "yellow"]
+allowed_css_keywords = fromAscList $(lift $ sort $ T.words "auto aqua black block blue bold both bottom brown center collapse dashed dotted fuchsia gray green !important italic left lime maroon medium none navy normal nowrap olive pointer purple red right solid silver teal top transparent underline white yellow")
 
 -- used in css filtering
 allowed_svg_properties :: Set Text
-allowed_svg_properties = fromList acceptable_svg_properties
-  where
-    acceptable_svg_properties = [ "fill", "fill-opacity", "fill-rule",
-        "stroke", "stroke-width", "stroke-linecap", "stroke-linejoin",
-        "stroke-opacity"]
+allowed_svg_properties = fromAscList $(lift $ sort $ T.words "fill fill-opacity fill-rule stroke stroke-width stroke-linecap stroke-linejoin stroke-opacity")
