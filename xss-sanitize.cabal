@@ -40,10 +40,11 @@ library
 
 test-suite test
     type: exitcode-stdio-1.0
-    hs-source-dirs: src
-    main-is: test/main.hs
+    hs-source-dirs: test, src
+    main-is: main.hs
     cpp-options: -DTEST
-    build-depends:    xss-sanitize, base == 4.* , containers
+    build-depends:    base == 4.* , containers
+                    , th-lift, th-lift-instances
                     , tagsoup     >= 0.12.2   && < 1
                     , utf8-string >= 0.3      && < 1.1
                     , css-text    >= 0.1.1    && < 0.2
