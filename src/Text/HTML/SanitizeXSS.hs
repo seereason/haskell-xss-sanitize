@@ -28,6 +28,7 @@ import Text.HTML.TagSoup
 import Data.Set as Set (Set(), map, member, notMember, (\\), fromList, fromAscList)
 import Data.Char ( toLower )
 import Data.List (sort)
+import Data.Monoid ((<>))
 import Data.Text (Text, words)
 import qualified Data.Text as T
 import Language.Haskell.TH.Lift (lift)
